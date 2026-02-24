@@ -1,6 +1,7 @@
 import { colors } from "@/theme/colors";
 import { Stack } from "expo-router";
 
+import { Loading } from "@/components/loading";
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -15,7 +16,7 @@ export default function Layout() {
     Inter_700Bold,
   });
 
-  if (!fontLoaded) return;
+  if (!fontLoaded) return <Loading />;
 
   return (
     <Stack
