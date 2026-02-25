@@ -15,9 +15,10 @@ type Props = {
     color: ColorValue;
   };
   isLeft?: boolean;
+  visible: boolean;
 };
 
-export function Summary({ data, icon, isLeft = false }: Props) {
+export function Summary({ data, icon, isLeft = false, visible }: Props) {
   return (
     <View style={styles.container}>
       <View style={[styles.header, isLeft && { justifyContent: "flex-end" }]}>
@@ -25,7 +26,7 @@ export function Summary({ data, icon, isLeft = false }: Props) {
         <Text style={styles.label}>{data.label}</Text>
       </View>
 
-      <Text style={styles.value}>{data.value}</Text>
+      <Text style={styles.value}>{visible ? data.value : "*****"}</Text>
     </View>
   );
 }
