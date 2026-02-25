@@ -31,4 +31,10 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+
+  total_container: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });
