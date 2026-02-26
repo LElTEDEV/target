@@ -1,19 +1,18 @@
-import { View } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { Alert, View } from "react-native";
+import { useCallback, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 import { List } from "@/components/list";
 import { Button } from "@/components/button";
+import { Loading } from "@/components/loading";
 import { Progress } from "@/components/progress";
 import { PageHeader } from "@/components/page-header";
 import { Transaction, TransactionProps } from "@/components/transaction";
 
 import { TransactionTypes } from "@/utils/transaction-types";
+import { numberToCurrency } from "@/utils/number-to-currency";
 
-const details = {
-  current: "R$ 580,00",
-  target: "R$ 1.790,00",
-  percentage: 25,
-};
+import { useTargetDatabase } from "@/database/use-target-database";
 
 const transactions: TransactionProps[] = [
   {
@@ -35,10 +34,51 @@ const transactions: TransactionProps[] = [
 export default function InProgress() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
+  const [isFetching, setIsFetching] = useState(true);
+  const [details, setDetails] = useState({
+    name: "",
+    percentage: 0,
+    target: "R$ 0,00",
+    current: "R$ 0,00",
+  });
+
+  const targetDatabase = useTargetDatabase();
+
+  async function fetchDetails() {
+    try {
+      const response = await targetDatabase.show(Number(id));
+
+      if (response === null) return;
+
+      setDetails({
+        name: response.name,
+        percentage: response?.percentage,
+        current: numberToCurrency(response.current),
+        target: numberToCurrency(response?.amount),
+      });
+    } catch (error) {
+      Alert.alert(
+        "Erro",
+        "Não foi possível visualizar os detalhes dessa meta.",
+      );
+      console.log(error);
+    } finally {
+      setIsFetching(false);
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchDetails();
+    }, []),
+  );
+
+  if (isFetching) return <Loading />;
+
   return (
     <View style={{ flex: 1, padding: 24, gap: 32 }}>
       <PageHeader
-        title="Apple Watch"
+        title={details.name}
         rightButton={{ icon: "edit", onPress: () => {} }}
       />
 
