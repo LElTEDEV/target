@@ -1,10 +1,12 @@
-import { StatusBar, View } from "react-native";
-import { router } from "expo-router";
+import { useCallback, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { Alert, StatusBar, View } from "react-native";
 
 import { List } from "@/components/list";
-import { Target } from "@/components/target";
 import { Button } from "@/components/button";
 import { HomeHeader } from "@/components/home-header";
+import { Target, TargetProps } from "@/components/target";
+import { useTargetDatabase } from "@/database/use-target-database";
 
 const summary = {
   total: "R$ 2,680.00",
@@ -12,24 +14,41 @@ const summary = {
   output: { label: "Saídas", value: "R$ 883.65" },
 };
 
-const targets = [
-  {
-    id: "1",
-    name: "Apple Watch",
-    current: "R$ 580,00",
-    percentage: "50%",
-    target: "R$ 1.790,00",
-  },
-  {
-    id: "2",
-    name: "Comprar uma cadeira ergonômica",
-    current: "R$ 900,00",
-    percentage: "75%",
-    target: "R$ 1.200,00",
-  },
-];
-
 export default function Index() {
+  const targetDatabase = useTargetDatabase();
+  const [targets, setTargets] = useState<TargetProps[] | undefined>([]);
+
+  async function fetchTargets(): Promise<TargetProps[] | undefined> {
+    try {
+      const response = await targetDatabase.listBySavedValue();
+
+      return response.map((item) => ({
+        id: String(item.id),
+        name: item.name,
+        current: String(item.current),
+        percentage: item.percentage.toFixed(0) + "%",
+        target: String(item.amount),
+      }));
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível carregar as metas.");
+      console.log(error);
+    }
+  }
+
+  async function fetchData() {
+    const targetDataPromise = fetchTargets();
+
+    const [targetData] = await Promise.all([targetDataPromise]);
+
+    setTargets(targetData);
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, []),
+  );
+
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
@@ -38,7 +57,7 @@ export default function Index() {
       <List
         data={targets}
         title="Metas"
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => String(item.id)}
         emptyMessage="Nenuma meta. Toque em nova meta para criar."
         renderItem={({ item }) => (
           <Target
