@@ -85,7 +85,10 @@ export default function InProgress() {
     <View style={{ flex: 1, padding: 24, gap: 32 }}>
       <PageHeader
         title={details.name}
-        rightButton={{ icon: "edit", onPress: () => {} }}
+        rightButton={{
+          icon: "edit",
+          onPress: () => router.navigate(`/target?id=${id}`),
+        }}
       />
 
       <Progress data={details} />
