@@ -62,7 +62,7 @@ export function HomeHeader({ data }: Props) {
         <Summary
           data={data.output}
           icon={{ name: "arrow-downward", color: colors.red[400] }}
-          isLeft
+          isRight
           visible={visible}
         />
       </View>
