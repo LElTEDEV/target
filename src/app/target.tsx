@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 
@@ -47,11 +47,49 @@ export default function Target() {
     setIsProcessing(true);
 
     if (id) {
-      // update
+      update();
     } else {
       create();
     }
   }
+
+  async function update() {
+    try {
+      await targetDatabase.update({ id: Number(id), name, amount });
+
+      Alert.alert("Sucesso!", "Meta atualizada com sucesso!", [
+        {
+          text: "Ok",
+          onPress: () => router.back(),
+        },
+      ]);
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível atualizar a meta.");
+      console.log(error);
+    } finally {
+      setIsProcessing(false);
+    }
+  }
+
+  async function fetchDetails(id: number) {
+    try {
+      const response = await targetDatabase.show(id);
+
+      if (!response) return;
+
+      setName(response?.name);
+      setAmount(response?.amount);
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível carregar os detalhes da meta.");
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (id) {
+      fetchDetails(Number(id));
+    }
+  }, [id]);
 
   return (
     <View style={{ flex: 1, padding: 24 }}>
