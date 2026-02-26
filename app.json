@@ -20,7 +20,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.leitedev.target"
     },
-    "plugins": ["expo-router", "expo-font"],
+    "plugins": ["expo-router", "expo-font", "expo-sqlite"],
     "experiments": {
       "typedRoutes": true
     }
