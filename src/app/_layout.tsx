@@ -1,13 +1,16 @@
-import { colors } from "@/theme/colors";
+import { Suspense } from "react";
 import { Stack } from "expo-router";
-
-import { Loading } from "@/components/loading";
 import {
   Inter_400Regular,
   Inter_500Medium,
   Inter_700Bold,
   useFonts,
 } from "@expo-google-fonts/inter";
+import { SQLiteProvider } from "expo-sqlite";
+
+import { colors } from "@/theme/colors";
+import { migrate } from "@/database/migrate";
+import { Loading } from "@/components/loading";
 
 export default function Layout() {
   const [fontLoaded] = useFonts({
@@ -19,17 +22,19 @@ export default function Layout() {
   if (!fontLoaded) return <Loading />;
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: {
-          flex: 1,
-          padding: 20,
-          justifyContent: "center",
-          backgroundColor: colors.white,
-        },
-        animation: "none",
-      }}
-    />
+    <Suspense fallback={<Loading />}>
+      <SQLiteProvider databaseName="target.db" onInit={migrate} useSuspense>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              flex: 1,
+              backgroundColor: colors.white,
+            },
+            animation: "none",
+          }}
+        />
+      </SQLiteProvider>
+    </Suspense>
   );
 }
