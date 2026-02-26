@@ -67,9 +67,15 @@ export default function InProgress() {
     }
   }
 
+  async function fetchData() {
+    const fetchDetailsPromise = fetchDetails();
+
+    await Promise.all([fetchDetailsPromise]);
+  }
+
   useFocusEffect(
     useCallback(() => {
-      fetchDetails();
+      fetchData();
     }, []),
   );
 
