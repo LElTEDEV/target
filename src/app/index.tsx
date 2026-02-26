@@ -7,6 +7,7 @@ import { Button } from "@/components/button";
 import { HomeHeader } from "@/components/home-header";
 import { Target, TargetProps } from "@/components/target";
 import { useTargetDatabase } from "@/database/use-target-database";
+import { Loading } from "@/components/loading";
 
 const summary = {
   total: "R$ 2,680.00",
@@ -16,6 +17,8 @@ const summary = {
 
 export default function Index() {
   const targetDatabase = useTargetDatabase();
+
+  const [isFetching, setIsFetching] = useState(true);
   const [targets, setTargets] = useState<TargetProps[] | undefined>([]);
 
   async function fetchTargets(): Promise<TargetProps[] | undefined> {
@@ -32,6 +35,8 @@ export default function Index() {
     } catch (error) {
       Alert.alert("Erro", "Não foi possível carregar as metas.");
       console.log(error);
+    } finally {
+      setIsFetching(false);
     }
   }
 
@@ -48,6 +53,8 @@ export default function Index() {
       fetchData();
     }, []),
   );
+
+  if (isFetching) return <Loading />;
 
   return (
     <View style={{ flex: 1 }}>
