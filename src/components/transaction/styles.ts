@@ -5,8 +5,8 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   container: {
     gap: 7,
-    height: 72,
     width: "100%",
+    paddingVertical: 16,
     alignItems: "center",
     flexDirection: "row",
   },
