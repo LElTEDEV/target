@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   },
 
   label: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.blue[300],
     fontFamily: fontFamily.regular,
   },
