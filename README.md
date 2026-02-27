@@ -313,15 +313,19 @@ Uma camada de serviços de API pode ser adicionada futuramente para sincronizaç
 ### 📥 Clonagem do repositório
 
 git clone https://github.com/LElTEDEV/target.git
-cd target### 📦 Instalação de dependências
+cd target
 
-npm install### ▶️ Rodar no Android
+### 📦 Instalação de dependências
+
+npm install
+
+### ▶️ Rodar no Android
 
 Com emulador Android aberto ou dispositivo físico conectado:
 
 npm run android
 
-# e depois escolher a opção "a" para Android
+e depois escolher a opção "a" para Android
 
 ### 🍎 Rodar no iOS (macOS)
 
@@ -329,7 +333,7 @@ Com simulador iOS aberto ou dispositivo físico configurado:
 
 npm run ios
 
-# e depois escolher a opção "i" para iOS
+e depois escolher a opção "i" para iOS
 
 ### 🔑 Variáveis de ambiente
 
