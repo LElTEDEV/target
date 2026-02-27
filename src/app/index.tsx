@@ -10,18 +10,19 @@ import { Target, TargetProps } from "@/components/target";
 
 import { useTargetDatabase } from "@/database/use-target-database";
 import { numberToCurrency } from "@/utils/number-to-currency";
-
-const summary = {
-  total: "R$ 2,680.00",
-  input: { label: "Entradas", value: "R$ 6,184.00" },
-  output: { label: "Saídas", value: "R$ 883.65" },
-};
+import { useTransactionDatabase } from "@/database/use-transaction-database";
 
 export default function Index() {
   const targetDatabase = useTargetDatabase();
+  const transactionsDatabase = useTransactionDatabase();
 
   const [isFetching, setIsFetching] = useState(true);
   const [targets, setTargets] = useState<TargetProps[] | undefined>([]);
+  const [summary, setSummary] = useState({
+    total: "",
+    input: { label: "Entradas", value: "" },
+    output: { label: "Saídas", value: "" },
+  });
 
   async function fetchTargets(): Promise<TargetProps[] | undefined> {
     try {
@@ -42,10 +43,31 @@ export default function Index() {
     }
   }
 
+  async function fetchSummary() {
+    try {
+      const response = await transactionsDatabase.summary();
+
+      if (!response) return;
+
+      setSummary((prev) => ({
+        input: { ...prev.input, value: numberToCurrency(response.input) },
+        output: { ...prev.output, value: numberToCurrency(response.output) },
+        total: numberToCurrency((response.input += response.output)),
+      }));
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível puxar as informações do summary");
+      console.log(error);
+    }
+  }
+
   async function fetchData() {
     const targetDataPromise = fetchTargets();
+    const fetchSummaryPromise = fetchSummary();
 
-    const [targetData] = await Promise.all([targetDataPromise]);
+    const [targetData] = await Promise.all([
+      targetDataPromise,
+      fetchSummaryPromise,
+    ]);
 
     setTargets(targetData);
   }
