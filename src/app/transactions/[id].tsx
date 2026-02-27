@@ -25,8 +25,11 @@ export default function Transactions() {
 
   async function handleCreate() {
     try {
-      if (amount <= 0) {
-        Alert.alert("Atenção!", "O valor precisa ser maior que 0 (zero).");
+      if (!amount || amount <= 0) {
+        return Alert.alert(
+          "Atenção!",
+          "O valor precisa ser maior que 0 (zero).",
+        );
       }
 
       setIsCreating(true);
