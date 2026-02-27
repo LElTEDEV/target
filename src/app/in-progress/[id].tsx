@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Alert, View } from "react-native";
 import { useCallback, useState } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
@@ -62,7 +63,7 @@ export default function InProgress() {
       setTransactions(
         response.map((transaction) => ({
           id: String(transaction.id),
-          date: String(transaction.created_at),
+          date: dayjs(transaction.created_at).format("DD/MM/YYYY [às] HH:mm"),
           value: numberToCurrency(transaction.amount).replace("-", ""),
           description: transaction.observation,
           type:
