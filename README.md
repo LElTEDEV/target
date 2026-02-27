@@ -86,6 +86,8 @@ Aplicativo mobile para **organizar metas financeiras pessoais**, permitindo que 
 - **Objetivo**:  
   Exibir o **resumo financeiro global** (entradas, saídas, total) e listar todas as metas financeiras do usuário em ordem de maior valor guardado.
 
+![Tela Home](assets/screenshots/home.jpg)
+
 - **Principais componentes**:
   - `HomeHeader`: Cabeçalho com:
     - Total que o usuário possui (com opção de ocultar/mostrar valores)
