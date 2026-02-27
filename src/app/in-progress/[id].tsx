@@ -31,6 +31,32 @@ export default function InProgress() {
   const targetDatabase = useTargetDatabase();
   const transactionsDatabase = useTransactionDatabase();
 
+  async function removeTransaction(id: number) {
+    try {
+      await transactionsDatabase.remove(id);
+      await fetchData();
+    } catch (error) {
+      Alert.alert(
+        "Erro",
+        "Não foi possível remover essa transação. Tente novamente mais tarde",
+      );
+      console.log(error);
+    }
+  }
+
+  function handleRemoveTransaction(id: number) {
+    Alert.alert("Remover", "Deseja realmente remover?", [
+      {
+        style: "cancel",
+        text: "Não",
+      },
+      {
+        text: "Sim",
+        onPress: () => removeTransaction(id),
+      },
+    ]);
+  }
+
   async function fetchDetails() {
     try {
       const response = await targetDatabase.show(Number(id));
@@ -113,7 +139,10 @@ export default function InProgress() {
         data={transactions}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Transaction data={item} onRemove={() => {}} />
+          <Transaction
+            data={item}
+            onRemove={() => handleRemoveTransaction(Number(item.id))}
+          />
         )}
         emptyMessage="Nenhuma transação. Toque em nova transação para guardar seu primeiro dinheiro aqui."
       />
