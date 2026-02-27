@@ -48,5 +48,14 @@ export function useTransactionDatabase() {
     `);
   }
 
-  return { create, getTransactionsByDate };
+  async function remove(id: number) {
+    await database.runAsync(`
+      DELETE FROM
+        transactions
+      WHERE
+        id = ${id}
+    `);
+  }
+
+  return { create, remove, getTransactionsByDate };
 }
