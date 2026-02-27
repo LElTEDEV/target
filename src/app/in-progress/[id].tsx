@@ -13,28 +13,13 @@ import { TransactionTypes } from "@/utils/transaction-types";
 import { numberToCurrency } from "@/utils/number-to-currency";
 
 import { useTargetDatabase } from "@/database/use-target-database";
-
-const transactions: TransactionProps[] = [
-  {
-    id: "1",
-    value: "R$ 300",
-    date: "25/02/2026",
-    description: "Adiantamento de salário",
-    type: TransactionTypes.Input,
-  },
-  {
-    id: "2",
-    value: "R$ 120",
-    date: "22/02/2026",
-    type: TransactionTypes.Output,
-    description: "Conta de luz",
-  },
-];
+import { useTransactionDatabase } from "@/database/use-transaction-database";
 
 export default function InProgress() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const [isFetching, setIsFetching] = useState(true);
+  const [transactions, setTransactions] = useState<TransactionProps[]>([]);
   const [details, setDetails] = useState({
     name: "",
     percentage: 0,
@@ -43,6 +28,7 @@ export default function InProgress() {
   });
 
   const targetDatabase = useTargetDatabase();
+  const transactionsDatabase = useTransactionDatabase();
 
   async function fetchDetails() {
     try {
@@ -67,10 +53,38 @@ export default function InProgress() {
     }
   }
 
+  async function fetchTransactions() {
+    try {
+      const response = await transactionsDatabase.getTransactionsByDate(
+        Number(id),
+      );
+
+      setTransactions(
+        response.map((transaction) => ({
+          id: String(transaction.id),
+          date: String(transaction.created_at),
+          value: numberToCurrency(transaction.amount).replace("-", ""),
+          description: transaction.observation,
+          type:
+            transaction.amount < 0
+              ? TransactionTypes.Output
+              : TransactionTypes.Input,
+        })),
+      );
+    } catch (error) {
+      Alert.alert(
+        "Erro",
+        "Não foi possível coletar as transações dessa meta. Tente novamente mais tarde.",
+      );
+      console.log(error);
+    }
+  }
+
   async function fetchData() {
     const fetchDetailsPromise = fetchDetails();
+    const fetchTransactionsPromise = fetchTransactions();
 
-    await Promise.all([fetchDetailsPromise]);
+    await Promise.all([fetchDetailsPromise, fetchTransactionsPromise]);
   }
 
   useFocusEffect(
