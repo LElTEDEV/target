@@ -86,7 +86,7 @@ Aplicativo mobile para **organizar metas financeiras pessoais**, permitindo que 
 - **Objetivo**:  
   Exibir o **resumo financeiro global** (entradas, saídas, total) e listar todas as metas financeiras do usuário em ordem de maior valor guardado.
 
-![Tela Home](assets/screenshots/home.jpg)
+  ![Tela Home](assets/screenshots/home.jpg)
 
 - **Principais componentes**:
   - `HomeHeader`: Cabeçalho com:
@@ -122,6 +122,8 @@ Aplicativo mobile para **organizar metas financeiras pessoais**, permitindo que 
 - **Objetivo**:  
   Permitir que o usuário **crie uma nova meta** ou **edite/remova** uma meta existente, definindo nome e valor objetivo.
 
+  ![Tela Home](assets/screenshots/nova_meta.jpg)
+
 - **Principais componentes**:
   - `PageHeader`:
     - Título: **"Meta"**
@@ -154,6 +156,8 @@ Aplicativo mobile para **organizar metas financeiras pessoais**, permitindo que 
 - **Nome da tela**: Detalhes da Meta / Progresso
 - **Objetivo**:  
   Exibir os **detalhes da meta selecionada**, mostrar o **progresso atual** e listar todas as **transações associadas** (entradas e saídas).
+
+  ![Tela Home](assets/screenshots/progesso_meta.jpg)
 
 - **Principais componentes**:
   - `PageHeader`:
@@ -195,6 +199,8 @@ Aplicativo mobile para **organizar metas financeiras pessoais**, permitindo que 
 - **Nome da tela**: Nova transação
 - **Objetivo**:  
   Registrar uma **entrada** (depósito) ou **saída** (retirada) de valor para uma meta específica.
+
+  ![Tela Home](assets/screenshots/nova_transacao.jpg)
 
 - **Principais componentes**:
   - `PageHeader`:
